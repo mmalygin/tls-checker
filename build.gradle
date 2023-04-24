@@ -4,9 +4,6 @@ plugins {
     id 'io.freefair.lombok' version '6.6.1'
 }
 
-group = 'io.github.mmalygin'
-version = '1.0-SNAPSHOT'
-
 repositories {
     mavenCentral()
 }
@@ -20,6 +17,16 @@ dependencies {
 
 application {
     mainClass = 'io.github.mmalygin.Main'
+}
+
+jar {
+    manifest {
+        attributes "Main-Class": "io.github.mmalygin.Main"
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 test {
