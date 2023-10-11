@@ -1,11 +1,13 @@
 package io.github.mmalygin;
 
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Main {
@@ -42,8 +44,8 @@ public class Main {
 
         try {
             // parse the command line arguments
-            var parser = new DefaultParser();
-            var line = parser.parse(OPTIONS, args);
+            DefaultParser parser = new DefaultParser();
+            CommandLine line = parser.parse(OPTIONS, args);
             if (line.hasOption(OPT_HELP) || line.getArgList().isEmpty()) {
                 usage();
                 return;
@@ -57,13 +59,13 @@ public class Main {
                 }
             }
             if (line.hasOption(OPT_DEBUG)) {
-                var value = line.getOptionValue(OPT_DEBUG);
+                String value = line.getOptionValue(OPT_DEBUG);
                 if (value != null) {
                     System.setProperty("javax.net.debug", value);
                 }
             }
-            var arg = line.getArgList().get(0);
-            var m = HOSTPORT_PATTERN.matcher(arg);
+            String arg = line.getArgList().get(0);
+            Matcher m = HOSTPORT_PATTERN.matcher(arg);
             if (!m.find()) {
                 System.out.println("Error: bad hostname:port");
                 usage();
@@ -81,7 +83,7 @@ public class Main {
                 return;
             }
 
-            var checker = new Checker(hostname, port, timeoutSecs);
+            Checker checker = new Checker(hostname, port, timeoutSecs);
             checker.check();
 
         } catch (ParseException exp) {
